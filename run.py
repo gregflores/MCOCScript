@@ -8,7 +8,7 @@ from game import Game
 
 #img = cv2.imread(r'C:\Users\flore\Documents\Python Scripts\MCOCScript\images\help-button.png', 0)
 #cv2.imshow('window', img)
-
+#lol
 vision = Vision()
 controller = Controller()
 game = Game(vision, controller)
