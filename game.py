@@ -109,40 +109,125 @@ class Game:
             
     #Create states in each method. In and Out states            
     def find_match(self):
-        matched = self.vision.find_template('find-match')
-        time.sleep(0.5)
-        if matched:
-            self.controller.action_key('s', 0.2)
-            self.state = 'picking opponents'
-        else :
-            self.state = 'finding match'
-    
+        section = 'In'
+        while section == 'In':
+            matched = self.vision.find_template('find-match')
+            #self.log(matched)
+            time.sleep(1)
+            if matched:
+                self.log('Found Match In')
+                self.controller.action_key('s', 0.2)
+                section = 'Out'
+            else :
+                self.vision.refresh_frame()
+                self.state = 'finding match'
+        while section == 'Out':
+            self.vision.refresh_frame()
+            matched = self.vision.find_template('find-match')
+            #self.log(matched)
+            time.sleep(1)
+            if matched:
+                self.log('Found Match Out')
+                self.controller.action_key('s', 0.2)
+                section = 'Out'
+            else :
+                self.log('Out complete')
+                section = 'Done'
+                self.state = 'picking opponents'
+
     def pick_opponents(self):
-        matched = self.vision.find_template('continue')
-        time.sleep(0.5)
-        if matched:
-            self.controller.action_key('d', 0.2)
-            self.state = 'accepting config'
-        else :
-            self.state = 'picking opponents'
+        section = 'In'
+        while section == 'In':
+            matched = self.vision.find_template('continue')
+            #self.log(matched)
+            time.sleep(1)
+            if matched:
+                self.log('Found Match In')
+                self.controller.action_key('d', 0.2)
+                section = 'Out'
+            else :
+                self.vision.refresh_frame()
+                self.state = 'picking opponents'
+        while section == 'Out':
+            self.vision.refresh_frame()
+            matched = self.vision.find_template('continue')
+            #self.log(matched)
+            time.sleep(1)
+            if matched:
+                self.log('Found Match Out')
+                self.controller.action_key('d', 0.2)
+                section = 'Out'
+            else :
+                self.log('Out complete')
+                section = 'Done'
+                self.state = 'accepting config'
     
     def accept_config(self):
-        matched = self.vision.find_template('accept')
-        time.sleep(0.5)
-        if matched:
-            self.controller.action_key('d', 0.2)
-            self.state = 'continuing to fight'
-        else :
-            self.state = 'accepting config'
+        section = 'In'
+        while section == 'In':
+            matched = self.vision.find_template('accept')
+            #self.log(matched)
+            if matched:
+                self.log('Found Match In')
+                self.controller.action_key('d', 0.2)
+                section = 'Out'
+            else :
+                time.sleep(5)
+                self.vision.refresh_frame()
+                self.state = 'accepting config'
+        while section == 'Out':
+            time.sleep(5)
+            self.vision.refresh_frame()
+            matched = self.vision.find_template('accept')
+            #self.log(matched)
+            if matched:
+                self.log('Found Match Out')
+                self.controller.action_key('d', 0.2)
+                section = 'Out'
+            else :
+                self.log('Out complete')
+                section = 'Done'
+                self.state = 'continuing to fight'
 
     def continue_to_fight(self):
-        matched = self.vision.find_template('continue')
-        time.sleep(0.5)
-        if matched:
-            self.controller.action_key('d', 0.2)
-            self.state = 'loading into fight'
-        else :
-            self.state = 'continuing to fight'
+        section = 'In'
+        i=0
+        self.log('in continue section')
+        
+        while section == 'In' and i < 10:
+            matched = self.vision.find_template('continue')
+            self.log(matched)
+            time.sleep(1)
+            i = i + 1
+            if matched:
+                self.log('Found Match In')
+                self.controller.action_key('d', 0.2)
+                section = 'Out'
+                i = 0
+            else :
+                self.vision.refresh_frame()
+                self.state = 'continuing to fight'
+                if i == 10:
+                    i = 0
+                    section = 'Out'
+        while section == 'Out' and i < 10:
+            self.vision.refresh_frame()
+            matched = self.vision.find_template('continue')
+            self.log(matched)
+            time.sleep(1)
+            i = i + 1
+            if matched:
+                self.log('Found Match Out')
+                self.controller.action_key('d', 0.2)
+                section = 'Out'
+                if i == 10:
+                    self.state = 'loading into fight'
+                    break
+            else :
+                self.log('Out complete')
+                i = 0
+                section = 'Done'
+                self.state = 'loading into fight'
 
     def load_into_fight(self):
         matched = self.vision.find_template('pause')
@@ -190,15 +275,31 @@ class Game:
 
 
     def next_series(self):
-        coord = self.vision.find_template_center('next-series')
-        time.sleep(0.5)
-        if coord:
-            self.controller.click_button(coord[0], coord[1])
-            time.sleep(2)
-            self.state = 'look for help'
-        else:
-            self.state = 'next series'
-
+        section = 'In'
+        while section == 'In':
+            coord = self.vision.find_template_center('next-series')
+            time.sleep(1)
+            if coord:
+                self.log('Found Match In')
+                self.controller.click_button(coord[0], coord[1])
+                time.sleep(2)
+                section = 'Out'
+            else:
+                self.vision.refresh_frame()
+                self.state = 'next series'
+        while section == 'Out':
+            self.vision.refresh_frame()
+            coord = self.vision.find_template_center('next-series')
+            time.sleep(1)
+            if coord:
+                self.log('Found Match Out')
+                self.controller.click_button(coord[0], coord[1])
+                time.sleep(2)
+                section = 'Out'
+            else:
+                self.log('Out complete')
+                section = 'Done'
+                self.state = 'look for help'
 
     def log(self, text):
         print('[%s] %s' % (time.strftime('%H:%M:%S'), text))
