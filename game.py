@@ -27,8 +27,10 @@ class Game:
     #end match 3        - j
     #next series        - z
 
-    # When the game slows down, the checks could screw up
-    # Maybe check if its the first or second time we've gotten to press the button
+    # DONE:When the game slows down, the checks could screw up
+    # DONE:Maybe check if its the first or second time we've gotten to press the button
+    #NEED TO ACCOUNT FOR MISTAKES IN LOADING AND HELPING CHAMPS
+
 
     def run(self):
         while True:
@@ -89,6 +91,20 @@ class Game:
         self.controller.click_on_window()
         self.state = 'look for help'
 
+    def champ_setup(self):
+        matchedhelp = self.vision.find_template('help-button')
+        matchedempty = self.vision.find_template('empty-slot-bottom')
+        coord = self.vision.find_template_center('next-series')
+        if coord:
+            self.controller.click_button(coord[0], coord[1])
+            time.sleep(1)
+        elif matchedhelp:
+            self.controller.action_key('h', 0.2)
+            time.sleep(0.3)
+        else:
+            self.vision.refresh_frame()
+            self.state = 'next series'
+
     def find_help(self):
         matched = self.vision.find_template('help-button')
         time.sleep(0.5)
@@ -103,7 +119,7 @@ class Game:
         time.sleep(1)
         if matched:
             self.controller.action_key('a', 0.3)
-            time.sleep(1)
+            time.sleep(0.3)
         else :
             self.state = 'finding match'
             
@@ -172,11 +188,11 @@ class Game:
                 self.controller.action_key('d', 0.2)
                 section = 'Out'
             else :
-                time.sleep(5)
+                time.sleep(2)
                 self.vision.refresh_frame()
                 self.state = 'accepting config'
         while section == 'Out':
-            time.sleep(5)
+            time.sleep(2)
             self.vision.refresh_frame()
             matched = self.vision.find_template('accept')
             #self.log(matched)
@@ -282,7 +298,7 @@ class Game:
             if coord:
                 self.log('Found Match In')
                 self.controller.click_button(coord[0], coord[1])
-                time.sleep(2)
+                time.sleep(1)
                 section = 'Out'
             else:
                 self.vision.refresh_frame()
@@ -294,7 +310,7 @@ class Game:
             if coord:
                 self.log('Found Match Out')
                 self.controller.click_button(coord[0], coord[1])
-                time.sleep(2)
+                time.sleep(1)
                 section = 'Out'
             else:
                 self.log('Out complete')
