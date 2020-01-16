@@ -17,6 +17,8 @@ class Vision:
             'next-fight' : r'images\next-fight.png',
             'next-series' : r'images\next-series.png',
             'pause' : r'images\pause.png',
+            'exit' : r'images\exit.png',
+            'find-match-free' : r'images\find-match-free.png'
         }
 
         self.templates = { k: cv2.imread(v, 0) for (k, v) in self.static_templates.items()}

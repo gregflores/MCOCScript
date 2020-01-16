@@ -34,17 +34,14 @@ class Game:
 
     def run(self):
         while True:
+            if cv2.waitKey(1) == ord('q'):
+                break
             self.vision.refresh_frame()
             if self.state == 'game start':
                 self.game_start()
-            elif self.state == 'look for help':
+            elif self.state == 'champ setup':
                 self.log(self.state)
-                time.sleep(1)
-                self.find_help()
-            elif self.state == 'loading champs':
-                self.log(self.state)
-                time.sleep(1)
-                self.load_champs()
+                self.champ_setup()
             elif self.state == 'finding match':
                 self.log(self.state)
                 time.sleep(1)
@@ -89,47 +86,38 @@ class Game:
 
     def game_start(self):
         self.controller.click_on_window()
-        self.state = 'look for help'
+        self.state = 'champ setup'
 
+
+    # Check if there is an X
+    # If so, press X
+    # If no check for help
+    # If no check for empty slot
+    # If none of these are triggered, move on
     def champ_setup(self):
         matchedhelp = self.vision.find_template('help-button')
         matchedempty = self.vision.find_template('empty-slot-bottom')
-        coord = self.vision.find_template_center('next-series')
+        coord = self.vision.find_template_center('exit')
+        time.sleep(0.5)
         if coord:
             self.controller.click_button(coord[0], coord[1])
             time.sleep(1)
         elif matchedhelp:
             self.controller.action_key('h', 0.2)
-            time.sleep(0.3)
-        else:
-            self.vision.refresh_frame()
-            self.state = 'next series'
-
-    def find_help(self):
-        matched = self.vision.find_template('help-button')
-        time.sleep(0.5)
-        if matched:
-            self.controller.action_key('h', 0.2)
-        else :
-            self.state = 'loading champs'
-        
-
-    def load_champs(self):
-        matched = self.vision.find_template('empty-slot-bottom')
-        time.sleep(1)
-        if matched:
+            time.sleep(1)
+        elif matchedempty:
             self.controller.action_key('a', 0.3)
-            time.sleep(0.3)
-        else :
+            time.sleep(1)
+        else:
             self.state = 'finding match'
             
     #Create states in each method. In and Out states            
     def find_match(self):
         section = 'In'
         while section == 'In':
-            matched = self.vision.find_template('find-match')
+            matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free')
             #self.log(matched)
-            time.sleep(1)
+            time.sleep(0.5)
             if matched:
                 self.log('Found Match In')
                 self.controller.action_key('s', 0.2)
@@ -139,9 +127,9 @@ class Game:
                 self.state = 'finding match'
         while section == 'Out':
             self.vision.refresh_frame()
-            matched = self.vision.find_template('find-match')
+            matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free')
             #self.log(matched)
-            time.sleep(1)
+            time.sleep(0.5)
             if matched:
                 self.log('Found Match Out')
                 self.controller.action_key('s', 0.2)
@@ -315,7 +303,7 @@ class Game:
             else:
                 self.log('Out complete')
                 section = 'Done'
-                self.state = 'look for help'
+                self.state = 'champ setup'
 
     def log(self, text):
         print('[%s] %s' % (time.strftime('%H:%M:%S'), text))
