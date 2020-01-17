@@ -115,7 +115,7 @@ class Game:
     def find_match(self):
         section = 'In'
         while section == 'In':
-            matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free')
+            matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free') or self.vision.find_template('find-match-2000')
             #self.log(matched)
             time.sleep(0.5)
             if matched:
@@ -127,7 +127,7 @@ class Game:
                 self.state = 'finding match'
         while section == 'Out':
             self.vision.refresh_frame()
-            matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free')
+            matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free') or self.vision.find_template('find-match-2000')
             #self.log(matched)
             time.sleep(0.5)
             if matched:
