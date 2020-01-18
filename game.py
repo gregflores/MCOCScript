@@ -97,11 +97,11 @@ class Game:
     def champ_setup(self):
         matchedhelp = self.vision.find_template('help-button')
         matchedempty = self.vision.find_template('empty-slot-bottom')
-        coord = self.vision.find_template_center('exit')
+        matchedinfo = self.vision.find_template('info')
         time.sleep(0.5)
-        if coord:
-            self.controller.click_button(coord[0], coord[1])
-            time.sleep(1)
+        if matchedinfo:
+            self.controller.click_button(156,400)
+            time.sleep(0.5)
         elif matchedhelp:
             self.controller.action_key('h', 0.2)
             time.sleep(1)

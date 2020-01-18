@@ -19,7 +19,8 @@ class Vision:
             'pause' : r'images\pause.png',
             'exit' : r'images\exit.png',
             'find-match-free' : r'images\find-match-free.png',
-            'find-match-2000' : r'images\find-match-2000.png'
+            'find-match-2000' : r'images\find-match-2000.png',
+            'info' : r'images\info.png'
         }
 
         self.templates = { k: cv2.imread(v, 0) for (k, v) in self.static_templates.items()}

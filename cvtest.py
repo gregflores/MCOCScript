@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-img_rgb = cv2.imread(r'images\aex-6.png')
+img_rgb = cv2.imread(r'images\aex-7.png')
 img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-template = cv2.imread(r'images\exit.png', 0)
+template = cv2.imread(r'images\empty-slot-bottom.png', 0)
 w, h = template.shape[::-1]
 
 res = cv2.matchTemplate(img_gray,template,cv2.TM_CCOEFF_NORMED)
