@@ -34,8 +34,6 @@ class Game:
 
     def run(self):
         while True:
-            if cv2.waitKey(1) == ord('q'):
-                break
             self.vision.refresh_frame()
             if self.state == 'game start':
                 self.game_start()
@@ -119,7 +117,7 @@ class Game:
             #self.log(matched)
             time.sleep(0.5)
             if matched:
-                self.log('Found Match In')
+                #self.log('Found Match In')
                 self.controller.action_key('s', 0.2)
                 section = 'Out'
             else :
@@ -131,11 +129,11 @@ class Game:
             #self.log(matched)
             time.sleep(0.5)
             if matched:
-                self.log('Found Match Out')
+                #self.log('Found Match Out')
                 self.controller.action_key('s', 0.2)
                 section = 'Out'
             else :
-                self.log('Out complete')
+                #self.log('Out complete')
                 section = 'Done'
                 self.state = 'picking opponents'
 
@@ -146,7 +144,7 @@ class Game:
             #self.log(matched)
             time.sleep(1)
             if matched:
-                self.log('Found Match In')
+                #self.log('Found Match In')
                 self.controller.action_key('d', 0.2)
                 section = 'Out'
             else :
@@ -158,11 +156,11 @@ class Game:
             #self.log(matched)
             time.sleep(1)
             if matched:
-                self.log('Found Match Out')
+                #self.log('Found Match Out')
                 self.controller.action_key('d', 0.2)
                 section = 'Out'
             else :
-                self.log('Out complete')
+                #self.log('Out complete')
                 section = 'Done'
                 self.state = 'accepting config'
     
@@ -172,7 +170,7 @@ class Game:
             matched = self.vision.find_template('accept')
             #self.log(matched)
             if matched:
-                self.log('Found Match In')
+                #self.log('Found Match In')
                 self.controller.action_key('d', 0.2)
                 section = 'Out'
             else :
@@ -185,11 +183,11 @@ class Game:
             matched = self.vision.find_template('accept')
             #self.log(matched)
             if matched:
-                self.log('Found Match Out')
+                #self.log('Found Match Out')
                 self.controller.action_key('d', 0.2)
                 section = 'Out'
             else :
-                self.log('Out complete')
+                #self.log('Out complete')
                 section = 'Done'
                 self.state = 'continuing to fight'
 
@@ -200,11 +198,11 @@ class Game:
         
         while section == 'In' and i < 10:
             matched = self.vision.find_template('continue')
-            self.log(matched)
+            #self.log(matched)
             time.sleep(1)
             i = i + 1
             if matched:
-                self.log('Found Match In')
+                #self.log('Found Match In')
                 self.controller.action_key('d', 0.2)
                 section = 'Out'
                 i = 0
@@ -217,18 +215,18 @@ class Game:
         while section == 'Out' and i < 10:
             self.vision.refresh_frame()
             matched = self.vision.find_template('continue')
-            self.log(matched)
+            #self.log(matched)
             time.sleep(1)
             i = i + 1
             if matched:
-                self.log('Found Match Out')
+                #self.log('Found Match Out')
                 self.controller.action_key('d', 0.2)
                 section = 'Out'
                 if i == 10:
                     self.state = 'loading into fight'
                     break
             else :
-                self.log('Out complete')
+                #self.log('Out complete')
                 i = 0
                 section = 'Done'
                 self.state = 'loading into fight'
@@ -284,7 +282,7 @@ class Game:
             coord = self.vision.find_template_center('next-series')
             time.sleep(1)
             if coord:
-                self.log('Found Match In')
+                #self.log('Found Match In')
                 self.controller.click_button(coord[0], coord[1])
                 time.sleep(1)
                 section = 'Out'
@@ -296,12 +294,12 @@ class Game:
             coord = self.vision.find_template_center('next-series')
             time.sleep(1)
             if coord:
-                self.log('Found Match Out')
+                #self.log('Found Match Out')
                 self.controller.click_button(coord[0], coord[1])
                 time.sleep(1)
                 section = 'Out'
             else:
-                self.log('Out complete')
+                #self.log('Out complete')
                 section = 'Done'
                 self.state = 'champ setup'
 
