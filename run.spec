@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['run.pycd', 'c:\\Users\\flore\\Documents\\Python Scripts\\MCOCScript'],
+a = Analysis(['run.py'],
              pathex=['C:\\Users\\flore\\Documents\\Python Scripts\\MCOCScript'],
              binaries=[],
              datas=[],
