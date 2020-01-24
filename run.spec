@@ -17,6 +17,24 @@ a = Analysis(['run.py'],
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
+
+a.datas += [('help-button.png' , 'images\\help-button.png', "DATA"),
+('empty-slot-bottom' , 'images\\empty-slot-bottom.png', "DATA"),
+('accept' , 'images\\accept.png', "DATA"),
+('continue' , 'images\\continue.png', "DATA"),
+('end-match' , 'images\\end-match.png', "DATA"),
+('final-fight' , 'images\\final-fight.png', "DATA"),
+('find-match' , 'images\\find-match.png', "DATA"),
+('next-fight' , 'images\\next-fight.png', "DATA"),
+('next-series' , 'images\\next-series.png', "DATA"),
+('pause' , 'images\\pause.png', "DATA"),
+('exit' , 'images\\exit.png', "DATA"),
+('find-match-free' , 'images\\find-match-free.png', "DATA"),
+('find-match-2000' , 'images\\find-match-2000.png', "DATA"),
+('info' , 'images\\info.png', "DATA")]
+
+
+
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
@@ -30,4 +48,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False )

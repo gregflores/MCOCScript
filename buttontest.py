@@ -28,15 +28,26 @@
 
 import tkinter as tk
 
+def onClick(event=None):
+    counter.set(counter.get() + 1)
+
+def onQuit(event=None):
+    running.set(False)
+
 master = tk.Tk()
-w = tk.Label(master, text = 'Hello World!', fg = 'red', font = ('Helvetica', 16), height = 30, width = 30)
+master.geometry('200x200+500+800')
+w = tk.Label(master, text = 'Series Count', width = 30)
+button = tk.Button(master, text = 'plus', command = onClick).pack()
+quitbutton = tk.Button(master, text = 'quit', command = onQuit).pack()
 
 w.pack()
 
-v = tk.IntVar()
-tk.Label(master, textvariable = v).pack()
+counter = tk.IntVar()
+running = tk.BooleanVar()
+tk.Label(master,textvariable = counter).pack()
 
-while True:
+running.set(True)
+print(running.get())
+while running.get():
     master.update_idletasks()
     master.update()
-    v.set(v.get() + 1)

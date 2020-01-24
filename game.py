@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import cv2
+import tkinter as tk
 
 class Game:
 
@@ -9,9 +10,14 @@ class Game:
         self.controller = controller
         self.state = 'game start'
         self.series = 0
+        self.master = tk.Tk()
+        self.counter = tk.IntVar()
+        self.running = tk.BooleanVar()
+        self.running.set(True)
 
-
-
+    def onQuit(self,event=None):
+        self.running.set(False)
+        print(self.running.get())
     ##States
     #Game start         - click on memu
     #Ask for help       - h
@@ -34,7 +40,18 @@ class Game:
 
 
     def run(self):
-        while True:
+
+        # master = tk.Tk()
+        self.master.geometry('200x200+500+800')
+        w = tk.Label(self.master, text = 'Series Count', width = 30)
+        quitbutton = tk.Button(self.master, text = 'quit', command = self.onQuit).pack()
+        w.pack()
+        tk.Label(self.master,textvariable = self.counter).pack()
+
+
+        while self.running.get():
+            self.master.update_idletasks()
+            self.master.update()
             self.vision.refresh_frame()
             if self.state == 'game start':
                 self.game_start()
@@ -309,8 +326,9 @@ class Game:
                 time.sleep(1)
                 section = 'Out'
             else:
-                self.series = self.series + 1
-                self.log('Series completed = {}'.format(self.series))
+                #self.series = self.series + 1
+                self.counter.set(self.counter.get() + 1)
+                #self.log('Series completed = {}'.format(self.series))
                 self.log('Begin next series')
                 section = 'Done'
                 self.state = 'champ setup'
