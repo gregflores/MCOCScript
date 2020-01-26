@@ -10,6 +10,7 @@ class Controller:
     def click_on_window(self):
         self.mouse.position = (100, 350)
         self.mouse.press(Button.left)
+        time.sleep(0.01)
         self.mouse.release(Button.left)
         self.mouse.position = (2000, 350)
     
