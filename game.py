@@ -16,6 +16,7 @@ class Game:
         self.series = 0
         self.master = tk.Tk()
         self.counter = tk.IntVar()
+        self.showstate = tk.StringVar()
         self.running = tk.BooleanVar()
         self.running.set(True)
         self.time1 = time.time()
@@ -23,7 +24,7 @@ class Game:
         self.deltatime = self.time2 - self.time2
         self.section = 'In'
         self.quitseries = False
-
+        self.showstate.set(self.state)
     def onQuit(self,event=None):
         self.log('Stopping Script')
         self.running.set(False)
@@ -69,13 +70,16 @@ class Game:
         #quitlaterbutton.pack()
         seriestitle = tk.Label(self.master, text = ' Series Count ')
         seriescount = tk.Label(self.master,textvariable = self.counter)
+        shownstate = tk.Label(self.master,textvariable = self.showstate)
         seriestitle.grid(row=0, column=1)
         #seriestitle.pack()
         seriescount.grid(row=1, column=1)
+        shownstate.grid(row=3, column=0)
         #seriescount.pack()
 
 
         while self.running.get():
+            self.showstate.set(self.state)
             self.master.update_idletasks()
             self.master.update()
             if self.state == 'game start':
@@ -277,7 +281,7 @@ class Game:
     def next_fight(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 2:
+        if self.deltatime > 5:
             self.vision.refresh_frame()
             matched = self.vision.find_template('next-fight')
             matched2 = self.vision.find_template('final-fight')
