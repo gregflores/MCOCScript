@@ -25,11 +25,12 @@ class Game:
         self.section = 'In'
         self.quitseries = False
         self.showstate.set(self.state)
-    def onQuit(self,event=None):
+
+    def onQuit(self, event=None):
         self.log('Stopping Script')
         self.running.set(False)
         #print(self.running.get())
-    
+
     def quitLater(self):
         self.quitseries = True
         self.controller.click_on_window()
@@ -53,30 +54,28 @@ class Game:
     # DONE:Maybe check if its the first or second time we've gotten to press the button
     #NEED TO ACCOUNT FOR MISTAKES IN LOADING AND HELPING CHAMPS
 
-
     def run(self):
 
         # master = tk.Tk()
         self.master.geometry('200x100+500+800')
         self.master.title('Arena Script')
-        
+
         self.master.grid_columnconfigure(0, minsize=100)
         self.master.grid_columnconfigure(1, minsize=100)
-        quitnowbutton = tk.Button(self.master, text = 'Quit Now', command = self.onQuit)
-        quitlaterbutton = tk.Button(self.master, text = 'Quit After Series', command = self.quitLater)
-        quitnowbutton.grid(row=0, column=0, columnspan=1, sticky=tk.W+tk.E)
+        quitnowbutton = tk.Button(self.master, text='Quit Now', command=self.onQuit)
+        quitlaterbutton = tk.Button(self.master, text='Quit After Series', command=self.quitLater)
+        quitnowbutton.grid(row=0, column=0, columnspan=1, sticky=tk.W + tk.E)
         #quitnowbutton.pack()
-        quitlaterbutton.grid(row=1, column=0, columnspan=1, sticky=tk.W+tk.E)
+        quitlaterbutton.grid(row=1, column=0, columnspan=1, sticky=tk.W + tk.E)
         #quitlaterbutton.pack()
-        seriestitle = tk.Label(self.master, text = ' Series Count ')
-        seriescount = tk.Label(self.master,textvariable = self.counter)
-        shownstate = tk.Label(self.master,textvariable = self.showstate)
+        seriestitle = tk.Label(self.master, text=' Series Count ')
+        seriescount = tk.Label(self.master, textvariable=self.counter)
+        shownstate = tk.Label(self.master, textvariable=self.showstate)
         seriestitle.grid(row=0, column=1)
         #seriestitle.pack()
         seriescount.grid(row=1, column=1)
         shownstate.grid(row=3, column=0)
         #seriescount.pack()
-
 
         while self.running.get():
             self.showstate.set(self.state)
@@ -115,43 +114,44 @@ class Game:
         self.controller.click_on_window()
         self.state = 'champ setup'
 
-
     # Check if there is an X
     # If so, press X
     # If no check for help
     # If no check for empty slot
     # If none of these are triggered, move on
+
     def champ_setup(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        #self.log(self.deltatime)
-        if self.deltatime > 1:
-            #self.log(self.deltatime)
+        # self.log(self.deltatime)
+        if self.deltatime > 2:
+            # self.log(self.deltatime)
             self.vision.refresh_frame()
             matchedhelp = self.vision.find_template('help-button')
             matchedempty = self.vision.find_template('empty-slot-bottom')
             matchedinfo = self.vision.find_template('info')
-            #matchedexit = self.vision.find_template('exit')
+            # matchedexit = self.vision.find_template('exit')
             if matchedinfo:
                 self.log('Click out of champ info')
-                self.controller.click_button(156,500)
+                self.controller.click_button(156, 500)
             elif matchedhelp:
                 self.log('Ask for help')
-                self.controller.action_key('h', 0.2)
+                self.controller.action_key('h', 0.5)
             elif matchedempty:
                 self.log('Insert Champ')
-                self.controller.action_key('a', 0.3)
+                self.controller.action_key('a', 0.5)
             else:
                 self.state = 'finding match'
-                #self.state = 'debug'
-                #self.log('Stopped')
+                # self.state = 'debug'
+                # self.log('Stopped')
             self.time1 = time.time()
-            
-    #Create states in each method. In and Out states            
+
+    # Create states in each method. In and Out states            
+
     def find_match(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 1:
+        if self.deltatime > 5:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free') or self.vision.find_template('find-match-2000')
@@ -159,14 +159,14 @@ class Game:
                     self.log('Finding Match')
                     self.controller.action_key('s', 0.2)
                     self.section = 'Out'
-                else :
+                else:
                     self.state = 'finding match'
             elif self.section == 'Out':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free') or self.vision.find_template('find-match-2000')
                 if matched:
                     self.controller.action_key('s', 0.2)
-                else :
+                else:
                     self.log('Found Match')
                     self.state = 'picking opponents'
                     self.section = 'In'
@@ -175,7 +175,7 @@ class Game:
     def pick_opponents(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 2:
+        if self.deltatime > 5:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('continue')
@@ -183,23 +183,23 @@ class Game:
                     self.log('Picking Opponents')
                     self.controller.action_key('d', 0.2)
                     self.section = 'Out'
-                else :
+                else:
                     self.state = 'picking opponents'
             elif self.section == 'Out':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('continue')
                 if matched:
                     self.controller.action_key('d', 0.2)
-                else :
+                else:
                     self.log('Opponents Picked')
                     self.state = 'accepting config'
                     self.section = 'In'
             self.time1 = time.time()
-    
+
     def accept_config(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 2:
+        if self.deltatime > 5:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('accept')
@@ -207,14 +207,14 @@ class Game:
                     self.log('Accepting Champ configuration')
                     self.controller.action_key('d', 0.2)
                     self.section = 'Out'
-                else :
+                else:
                     self.state = 'accepting config'
             elif self.section == 'Out':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('accept')
                 if matched:
                     self.controller.action_key('d', 0.2)
-                else :
+                else:
                     self.log('Accepted configuration')
                     self.state = 'continuing to fight'
                     self.section = 'In'
@@ -223,7 +223,7 @@ class Game:
     def continue_to_fight(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 2:
+        if self.deltatime > 5:
             self.log('in continue section')
             if self.section == 'In':
                 self.vision.refresh_frame()
@@ -232,14 +232,14 @@ class Game:
                     self.log('Continuing to fight')
                     self.controller.action_key('d', 0.2)
                     self.section = 'Out'
-                else :
+                else:
                     self.state = 'continuing to fight'
             elif self.section == 'Out':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('continue')
                 if matched:
                     self.controller.action_key('d', 0.2)
-                else :
+                else:
                     self.log('Loading into fight')
                     self.state = 'loading into fight'
                     self.section = 'In'                   
@@ -263,25 +263,23 @@ class Game:
         matched = self.vision.find_template('pause')
         if matched:
             #self.log('Found pause')
-            self.controller.action_key('g',0.05)
-            self.controller.action_key('f',0.01)
-            self.controller.action_key('f',0.01)
-            self.controller.action_key('f',0.01)
-            self.controller.action_key('f',0.01)
-            self.controller.action_key('a',0.01)
-            self.controller.action_key('s',0.01)
+            self.controller.action_key('g', 0.05)
+            self.controller.action_key('f', 0.01)
+            self.controller.action_key('f', 0.01)
+            self.controller.action_key('f', 0.01)
+            self.controller.action_key('f', 0.01)
+            self.controller.action_key('a', 0.01)
+            self.controller.action_key('s', 0.01)
             self.state = 'fighting'
-        else :
+        else:
             self.log('Fight End')
             self.state = 'next fight'
         self.time1 = time.time()
 
-            
-    
     def next_fight(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 5:
+        if self.deltatime > 10:
             self.vision.refresh_frame()
             matched = self.vision.find_template('next-fight')
             matched2 = self.vision.find_template('final-fight')
@@ -305,11 +303,10 @@ class Game:
                 self.state = 'next fight'
             self.time1 = time.time()
 
-
     def next_series(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 2:
+        if self.deltatime > 12:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 coord = self.vision.find_template_center('next-series')
@@ -329,11 +326,9 @@ class Game:
                     self.log('Begin next series')
                     self.state = 'champ setup'
                     self.section = 'In'
-                    if self.quitseries == True:
+                    if self.quitseries is True:
                         self.onQuit()
             self.time1 = time.time()
-
-        
 
     def log(self, text):
         print('[%s] %s' % (time.strftime('%H:%M:%S'), text))
