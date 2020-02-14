@@ -29,30 +29,30 @@ class Game:
     def onQuit(self, event=None):
         self.log('Stopping Script')
         self.running.set(False)
-        #print(self.running.get())
+        # print(self.running.get())
 
     def quitLater(self):
         self.quitseries = True
         self.controller.click_on_window()
-    ##States
-    #Game start         - click on memu
-    #Ask for help       - h
-    #Load champions     - a
-    #Find Match         - s
-    #pick opponents     - d
-    #accept config      - d
-    #continue to fight  - d
-    #fighting 1         - a h f g s
-    #next fight         - j
-    #fighting 2         - a h f g s
-    #final fight        - j
-    #fighting 3         - a h f g s
-    #end match 3        - j
-    #next series        - z
+    # States
+    # Game start         - click on memu
+    # Ask for help       - h
+    # Load champions     - a
+    # Find Match         - s
+    # pick opponents     - d
+    # accept config      - d
+    # continue to fight  - d
+    # fighting 1         - a h f g s
+    # next fight         - j
+    # fighting 2         - a h f g s
+    # final fight        - j
+    # fighting 3         - a h f g s
+    # end match 3        - j
+    # next series        - z
 
     # DONE:When the game slows down, the checks could screw up
     # DONE:Maybe check if its the first or second time we've gotten to press the button
-    #NEED TO ACCOUNT FOR MISTAKES IN LOADING AND HELPING CHAMPS
+    # NEED TO ACCOUNT FOR MISTAKES IN LOADING AND HELPING CHAMPS
 
     def run(self):
 
@@ -65,17 +65,17 @@ class Game:
         quitnowbutton = tk.Button(self.master, text='Quit Now', command=self.onQuit)
         quitlaterbutton = tk.Button(self.master, text='Quit After Series', command=self.quitLater)
         quitnowbutton.grid(row=0, column=0, columnspan=1, sticky=tk.W + tk.E)
-        #quitnowbutton.pack()
+        # quitnowbutton.pack()
         quitlaterbutton.grid(row=1, column=0, columnspan=1, sticky=tk.W + tk.E)
-        #quitlaterbutton.pack()
+        # quitlaterbutton.pack()
         seriestitle = tk.Label(self.master, text=' Series Count ')
         seriescount = tk.Label(self.master, textvariable=self.counter)
         shownstate = tk.Label(self.master, textvariable=self.showstate)
         seriestitle.grid(row=0, column=1)
-        #seriestitle.pack()
+        # seriestitle.pack()
         seriescount.grid(row=1, column=1)
         shownstate.grid(row=3, column=0)
-        #seriescount.pack()
+        # seriescount.pack()
 
         while self.running.get():
             self.showstate.set(self.state)
@@ -104,10 +104,10 @@ class Game:
             elif self.state == 'ending match':
                 self.end_match()
             elif self.state == 'next series':
-                self.next_series()                      
+                self.next_series()
             else:
                 pass
-            #time.sleep(1)
+            # time.sleep(1)
 
     def game_start(self):
         self.log('Script Startup')
@@ -146,7 +146,7 @@ class Game:
                 # self.log('Stopped')
             self.time1 = time.time()
 
-    # Create states in each method. In and Out states            
+    # Create states in each method. In and Out states
 
     def find_match(self):
         self.time2 = time.time()
@@ -242,7 +242,7 @@ class Game:
                 else:
                     self.log('Loading into fight')
                     self.state = 'loading into fight'
-                    self.section = 'In'                   
+                    self.section = 'In'
             self.time1 = time.time()
 
     def load_into_fight(self):
@@ -262,7 +262,7 @@ class Game:
         self.vision.refresh_frame()
         matched = self.vision.find_template('pause')
         if matched:
-            #self.log('Found pause')
+            # self.log('Found pause')
             self.controller.action_key('g', 0.05)
             self.controller.action_key('f', 0.01)
             self.controller.action_key('f', 0.01)
