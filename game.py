@@ -351,7 +351,7 @@ class Game:
     def next_series(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 12:
+        if self.deltatime > 8:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 coord = self.vision.find_template_center('next-series')
