@@ -12,17 +12,16 @@ class Controller:
         self.mouse.press(Button.left)
         time.sleep(0.01)
         self.mouse.release(Button.left)
-        self.mouse.position = (2000, 350)
-    
+        self.mouse.position = (500, 850)
+
     def click_button(self, x, y):
         self.mouse.position = (x, y)
         self.mouse.press(Button.left)
         self.mouse.release(Button.left)
-        self.mouse.position = (2000, 350)
+        self.mouse.position = (500, 850)
 
     def action_key(self, action, interval=0.1):
         self.keyboard.press(action)
         time.sleep(interval)
         self.keyboard.release(action)
-        #print(action)
-
+        # print(action)
