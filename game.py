@@ -108,8 +108,8 @@ class Game:
                 self.fighting()
             elif self.state == 'next fight':
                 self.next_fight()
-            elif self.state == 'final fight':
-                self.final_fight()
+            elif self.state == 'after final fight':
+                self.after_final_fight()
             elif self.state == 'ending match':
                 self.end_match()
             elif self.state == 'next series':
@@ -154,7 +154,7 @@ class Game:
     def find_match(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 5:
+        if self.deltatime > 3:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free') or self.vision.find_template('find-match-2000')
@@ -178,7 +178,7 @@ class Game:
     def pick_opponents(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 5:
+        if self.deltatime > 3:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('continue')
@@ -202,7 +202,7 @@ class Game:
     def accept_config(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 5:
+        if self.deltatime > 3:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 matched = self.vision.find_template('accept')
@@ -226,7 +226,7 @@ class Game:
     def continue_to_fight(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 5:
+        if self.deltatime > 3:
             self.log('in continue section')
             if self.section == 'In':
                 self.vision.refresh_frame()
@@ -282,28 +282,73 @@ class Game:
     def next_fight(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 8:
-            self.vision.refresh_frame()
-            matched = self.vision.find_template('next-fight')
-            matched2 = self.vision.find_template('final-fight')
-            matched3 = self.vision.find_template('end-match')
-            if matched:
-                self.controller.action_key('j')
-                self.controller.action_key('k')
-                self.log('Loading into second fight')
-                self.state = 'loading into fight'
-            elif matched2:
-                self.controller.action_key('j')
-                self.controller.action_key('k')
-                self.log('Loading into final fight')
-                self.state = 'loading into fight'
-            elif matched3:
-                self.controller.action_key('j')
-                self.controller.action_key('k')
-                self.log('Exiting fight')
-                self.state = 'next series'
-            else:
-                self.state = 'next fight'
+        if self.deltatime > 5:
+            if self.section == 'In':
+                self.vision.refresh_frame()
+                matched = self.vision.find_template('next-fight')
+                matched2 = self.vision.find_template('final-fight')
+                matched3 = self.vision.find_template('end-match')
+                if matched:
+                    self.controller.action_key('j')
+                    self.controller.action_key('k')
+                    self.log('Loading into second fight')
+                    self.section = 'Out'
+                    # self.state = 'loading into fight'
+                elif matched2:
+                    self.controller.action_key('j')
+                    self.controller.action_key('k')
+                    self.log('Loading into final fight')
+                    self.section = 'Out'
+                    # self.state = 'loading into fight'
+                elif matched3:
+                    self.log('Exiting fight')
+                    self.state = 'after final fight'
+                else:
+                    self.state = 'next fight'
+            elif self.section == 'Out':
+                self.vision.refresh_frame()
+                matched = self.vision.find_template('next-fight')
+                matched2 = self.vision.find_template('final-fight')
+                # matched3 = self.vision.find_template('end-match')
+                if matched:
+                    self.controller.action_key('j')
+                    self.controller.action_key('k')
+                    # self.log('Loading into second fight')
+                    # self.state = 'loading into fight'
+                elif matched2:
+                    self.controller.action_key('j')
+                    self.controller.action_key('k')
+                    # self.log('Loading into final fight')
+                    # self.state = 'loading into fight'
+                else:
+                    self.state = 'loading into fight'
+                    self.section = 'In'
+            self.time1 = time.time()
+
+    def after_final_fight(self):
+        self.time2 = time.time()
+        self.deltatime = self.time2 - self.time1
+        if self.deltatime > 3:
+            if self.section == 'In':
+                self.vision.refresh_frame()
+                matched = self.vision.find_template('end-match')
+                if matched:
+                    self.controller.action_key('j')
+                    self.controller.action_key('k')
+                    self.log('Exiting Fight')
+                    self.section = 'Out'
+                    # self.state = 'next series'
+                else:
+                    self.state = 'after final fight'
+            elif self.section == 'Out':
+                self.vision.refresh_frame()
+                matched = self.vision.find_template('end-match')
+                if matched:
+                    self.controller.action_key('j')
+                    self.controller.action_key('k')
+                else:
+                    self.state = 'next series'
+                    self.section = 'In'
             self.time1 = time.time()
 
     def next_series(self):
