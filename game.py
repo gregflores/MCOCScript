@@ -279,7 +279,7 @@ class Game:
     def next_fight(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 10:
+        if self.deltatime > 8:
             self.vision.refresh_frame()
             matched = self.vision.find_template('next-fight')
             matched2 = self.vision.find_template('final-fight')
@@ -306,7 +306,7 @@ class Game:
     def next_series(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        if self.deltatime > 12:
+        if self.deltatime > 8:
             if self.section == 'In':
                 self.vision.refresh_frame()
                 coord = self.vision.find_template_center('next-series')
