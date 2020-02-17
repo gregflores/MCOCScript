@@ -21,10 +21,23 @@ class Game:
         self.running.set(True)
         self.time1 = time.time()
         self.time2 = time.time()
-        self.deltatime = self.time2 - self.time2
+        self.deltatime = self.time2 - self.time1
         self.section = 'In'
         self.quitseries = False
         self.showstate.set(self.state)
+        self.stateList = [
+            'game start',
+            'champ setup',
+            'finding match',
+            'picking opponents',
+            'accepting config',
+            'continuing to fight',
+            'loading into fight',
+            'fighting',
+            'next fight',
+            'final fight',
+            'ending match',
+            'next series']
 
     def onQuit(self, event=None):
         self.log('Stopping Script')
@@ -65,17 +78,13 @@ class Game:
         quitnowbutton = tk.Button(self.master, text='Quit Now', command=self.onQuit)
         quitlaterbutton = tk.Button(self.master, text='Quit After Series', command=self.quitLater)
         quitnowbutton.grid(row=0, column=0, columnspan=1, sticky=tk.W + tk.E)
-        # quitnowbutton.pack()
         quitlaterbutton.grid(row=1, column=0, columnspan=1, sticky=tk.W + tk.E)
-        # quitlaterbutton.pack()
         seriestitle = tk.Label(self.master, text=' Series Count ')
         seriescount = tk.Label(self.master, textvariable=self.counter)
         shownstate = tk.Label(self.master, textvariable=self.showstate)
         seriestitle.grid(row=0, column=1)
-        # seriestitle.pack()
         seriescount.grid(row=1, column=1)
         shownstate.grid(row=3, column=0)
-        # seriescount.pack()
 
         while self.running.get():
             self.showstate.set(self.state)
@@ -107,7 +116,6 @@ class Game:
                 self.next_series()
             else:
                 pass
-            # time.sleep(1)
 
     def game_start(self):
         self.log('Script Startup')
@@ -123,14 +131,11 @@ class Game:
     def champ_setup(self):
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
-        # self.log(self.deltatime)
         if self.deltatime > 2:
-            # self.log(self.deltatime)
             self.vision.refresh_frame()
             matchedhelp = self.vision.find_template('help-button')
             matchedempty = self.vision.find_template('empty-slot-bottom')
             matchedinfo = self.vision.find_template('info')
-            # matchedexit = self.vision.find_template('exit')
             if matchedinfo:
                 self.log('Click out of champ info')
                 self.controller.click_button(156, 500)
@@ -142,8 +147,6 @@ class Game:
                 self.controller.action_key('a', 0.5)
             else:
                 self.state = 'finding match'
-                # self.state = 'debug'
-                # self.log('Stopped')
             self.time1 = time.time()
 
     # Create states in each method. In and Out states
