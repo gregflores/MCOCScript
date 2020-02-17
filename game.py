@@ -12,7 +12,7 @@ class Game:
     def __init__(self, vision, controller):
         self.vision = vision
         self.controller = controller
-        self.state = 'game start'
+        self.state = 'wait for start'
         self.series = 0
         self.master = tk.Tk()
         self.counter = tk.IntVar()
@@ -26,6 +26,7 @@ class Game:
         self.quitseries = False
         self.showstate.set(self.state)
         self.stateList = [
+            'wait for start',
             'game start',
             'champ setup',
             'finding match',
@@ -47,6 +48,20 @@ class Game:
     def quitLater(self):
         self.quitseries = True
         self.controller.click_on_window()
+
+    def startScript(self, button):
+        self.state = 'game start'
+        button.configure(text='Pause Script', command=lambda: self.pause_script(button))
+
+    def pause_script(self, button):
+        previousState = self.state
+        self.state = 'pause'
+        button.configure(text='Unpause', command=lambda: self.unpause_script(button, previousState))
+
+    def unpause_script(self, button, previousState):
+        self.state = previousState
+        button.configure(text='Pause Script', command=lambda: self.pause_script(button))
+
     # States
     # Game start         - click on memu
     # Ask for help       - h
@@ -70,15 +85,23 @@ class Game:
     def run(self):
 
         # master = tk.Tk()
-        self.master.geometry('200x100+500+800')
+        self.master.geometry('300x200+500+800')
         self.master.title('Arena Script')
 
         self.master.grid_columnconfigure(0, minsize=100)
         self.master.grid_columnconfigure(1, minsize=100)
+        self.master.grid_columnconfigure(2, minsize=100)
+
+        startButton = tk.Button(self.master, text='Start Script', command=lambda: self.startScript(startButton))
+        # pauseButton = tk.Button(self.master, text='Pause Script')
+        startButton.grid(row=0, column=2, columnspan=1, sticky=tk.W + tk.E)
+        # pauseButton.grid(row=2, column=3)
+
         quitnowbutton = tk.Button(self.master, text='Quit Now', command=self.onQuit)
         quitlaterbutton = tk.Button(self.master, text='Quit After Series', command=self.quitLater)
         quitnowbutton.grid(row=0, column=0, columnspan=1, sticky=tk.W + tk.E)
         quitlaterbutton.grid(row=1, column=0, columnspan=1, sticky=tk.W + tk.E)
+
         seriestitle = tk.Label(self.master, text=' Series Count ')
         seriescount = tk.Label(self.master, textvariable=self.counter)
         shownstate = tk.Label(self.master, textvariable=self.showstate)
@@ -119,7 +142,7 @@ class Game:
 
     def game_start(self):
         self.log('Script Startup')
-        self.controller.click_on_window()
+        # self.controller.click_on_window()
         self.state = 'champ setup'
 
     # Check if there is an X
