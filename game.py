@@ -59,6 +59,7 @@ class Game:
         button.configure(text='Unpause', command=lambda: self.unpause_script(button, previousState))
 
     def unpause_script(self, button, previousState):
+        self.controller.click_on_window()
         self.state = previousState
         button.configure(text='Pause Script', command=lambda: self.pause_script(button))
 
@@ -133,8 +134,6 @@ class Game:
                 self.next_fight()
             elif self.state == 'after final fight':
                 self.after_final_fight()
-            elif self.state == 'ending match':
-                self.end_match()
             elif self.state == 'next series':
                 self.next_series()
             else:
@@ -142,7 +141,7 @@ class Game:
 
     def game_start(self):
         self.log('Script Startup')
-        # self.controller.click_on_window()
+        self.controller.click_on_window()
         self.state = 'champ setup'
 
     # Check if there is an X
