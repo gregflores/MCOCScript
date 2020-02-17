@@ -20,7 +20,7 @@ class Controller:
         self.mouse.release(Button.left)
         self.mouse.position = (500, 850)
 
-    def action_key(self, action, interval=0.1):
+    def action_key(self, action, interval=0.5):
         self.keyboard.press(action)
         time.sleep(interval)
         self.keyboard.release(action)
