@@ -99,8 +99,8 @@ class Game:
                 self.fighting()
             elif self.state == 'next fight':
                 self.next_fight()
-            elif self.state == 'final fight':
-                self.final_fight()
+            elif self.state == 'after final fight':
+                self.after_final_fight()
             elif self.state == 'ending match':
                 self.end_match()
             elif self.state == 'next series':
