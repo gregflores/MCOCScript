@@ -3,6 +3,7 @@ import time
 import cv2
 import tkinter as tk
 
+
 class Game:
     # Use a time variable to do the individual states
     # Make curr time and last time
@@ -51,17 +52,20 @@ class Game:
 
     def startScript(self, button):
         self.state = 'game start'
-        button.configure(text='Pause Script', command=lambda: self.pause_script(button))
+        button.configure(text='Pause Script',
+                         command=lambda: self.pause_script(button))
 
     def pause_script(self, button):
         previousState = self.state
         self.state = 'pause'
-        button.configure(text='Unpause', command=lambda: self.unpause_script(button, previousState))
+        button.configure(
+            text='Unpause', command=lambda: self.unpause_script(button, previousState))
 
     def unpause_script(self, button, previousState):
         self.controller.click_on_window()
         self.state = previousState
-        button.configure(text='Pause Script', command=lambda: self.pause_script(button))
+        button.configure(text='Pause Script',
+                         command=lambda: self.pause_script(button))
 
     # States
     # Game start         - click on memu
@@ -93,13 +97,16 @@ class Game:
         self.master.grid_columnconfigure(1, minsize=100)
         self.master.grid_columnconfigure(2, minsize=100)
 
-        startButton = tk.Button(self.master, text='Start Script', command=lambda: self.startScript(startButton))
+        startButton = tk.Button(
+            self.master, text='Start Script', command=lambda: self.startScript(startButton))
         # pauseButton = tk.Button(self.master, text='Pause Script')
         startButton.grid(row=0, column=2, columnspan=1, sticky=tk.W + tk.E)
         # pauseButton.grid(row=2, column=3)
 
-        quitnowbutton = tk.Button(self.master, text='Quit Now', command=self.onQuit)
-        quitlaterbutton = tk.Button(self.master, text='Quit After Series', command=self.quitLater)
+        quitnowbutton = tk.Button(
+            self.master, text='Quit Now', command=self.onQuit)
+        quitlaterbutton = tk.Button(
+            self.master, text='Quit After Series', command=self.quitLater)
         quitnowbutton.grid(row=0, column=0, columnspan=1, sticky=tk.W + tk.E)
         quitlaterbutton.grid(row=1, column=0, columnspan=1, sticky=tk.W + tk.E)
 
@@ -114,6 +121,11 @@ class Game:
             self.showstate.set(self.state)
             self.master.update_idletasks()
             self.master.update()
+            self.deltatime = time.time() - self.time1
+            if self.deltatime > 10 * 60:
+                coord = self.vision.find_template_center('memu-logo')
+                if coord:
+                    self.controller.click_button(coord[0], coord[1])
             if self.state == 'game start':
                 self.game_start()
             elif self.state == 'champ setup':
@@ -179,7 +191,8 @@ class Game:
         if self.deltatime > 3:
             if self.section == 'In':
                 self.vision.refresh_frame()
-                matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free') or self.vision.find_template('find-match-2000')
+                matched = self.vision.find_template('find-match') or self.vision.find_template(
+                    'find-match-free') or self.vision.find_template('find-match-2000')
                 if matched:
                     self.log('Finding Match')
                     self.controller.action_key('s', 0.2)
@@ -188,7 +201,8 @@ class Game:
                     self.state = 'finding match'
             elif self.section == 'Out':
                 self.vision.refresh_frame()
-                matched = self.vision.find_template('find-match') or self.vision.find_template('find-match-free') or self.vision.find_template('find-match-2000')
+                matched = self.vision.find_template('find-match') or self.vision.find_template(
+                    'find-match-free') or self.vision.find_template('find-match-2000')
                 if matched:
                     self.controller.action_key('s', 0.2)
                 else:
