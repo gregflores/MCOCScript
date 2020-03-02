@@ -122,10 +122,14 @@ class Game:
             self.master.update_idletasks()
             self.master.update()
             self.deltatime = time.time() - self.time1
-            if self.deltatime > 10 * 60:
+            self.log(self.deltatime)
+            if self.deltatime > 10 * 4:
+                self.log('longer than 100')
                 coord = self.vision.find_template_center('memu-logo')
                 if coord:
+                    self.log('click mwmu')
                     self.controller.click_button(coord[0], coord[1])
+                    self.time1 = time.time()
             if self.state == 'game start':
                 self.game_start()
             elif self.state == 'champ setup':
