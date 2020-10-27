@@ -122,14 +122,14 @@ class Game:
             self.master.update_idletasks()
             self.master.update()
             self.deltatime = time.time() - self.time1
-            self.log(self.deltatime)
-            if self.deltatime > 10 * 4:
+            if self.deltatime > 10:
+                self.log(self.deltatime)
                 self.log('longer than 100')
                 coord = self.vision.find_template_center('memu-logo')
                 if coord:
-                    self.log('click mwmu')
+                    self.log('click memu')
                     self.controller.click_button(coord[0], coord[1])
-                    self.time1 = time.time()
+                self.time1 = time.time()
             if self.state == 'game start':
                 self.game_start()
             elif self.state == 'champ setup':
@@ -190,6 +190,7 @@ class Game:
     # Create states in each method. In and Out states
 
     def find_match(self):
+        self.log('Into Find match')
         self.time2 = time.time()
         self.deltatime = self.time2 - self.time1
         if self.deltatime > 3:
